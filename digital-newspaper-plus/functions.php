@@ -25,14 +25,14 @@ add_filter( 'digital_newspaper_get_customizer_defaults', function($defaults) {
 	$defaults['post_title_hover_effects'] = 'two';
 	$defaults['header_layout'] = 'two';
 	$defaults['main_banner_layout'] = 'two';
-	$defaults['main_banner_popular_posts_title']  = esc_html__( 'Popular Posts', 'digital-newspaper' );
+	$defaults['main_banner_popular_posts_title']  = esc_html__( 'Popular Posts', 'digital-newspaper-plus' );
 	$defaults['main_banner_popular_posts_categories']   = '[]';
 	$defaults['main_banner_popular_posts_direction']  = 'true';
 	$defaults['website_block_title_layout']  = 'layout-seven';
 	$defaults['archive_page_layout']  = 'six';
 	$defaults['website_layout']  = 'website_layout-full-width--layout';
 	$defaults['header_width_layout']  = 'contain';
-	$defaults['ticker_news_title']  = array( "icon"  => "fas fa-globe-americas", "text"   => esc_html__( 'Headlines', 'digital-newspaper' ) );
+	$defaults['ticker_news_title']  = array( "icon"  => "fas fa-globe-americas", "text"   => esc_html__( 'Headlines', 'digital-newspaper-plus' ) );
 	// Site Logo Typography
 	$defaults['site_title_typo']    = array(
         'font_family'   => array( 'value' => 'Nunito', 'label' => 'Nunito' ),
@@ -529,4 +529,91 @@ if( ! function_exists( 'digital_newspaper_custom_header_args' ) ) :
         return $args;
     }
     add_filter( 'digital_newspaper_custom_header_args', 'digital_newspaper_custom_header_args' );
+endif;
+
+if( ! function_exists( 'digital_newspaper_child_customizer_controls' ) ) :
+    /**
+     * Add custom controls to the Customizer.
+     */
+    function digital_newspaper_child_customizer_controls( $wp_customize ) {
+        $wp_customize->add_section( 'custom_ad_one_media_section', array(
+            'title'       => __( 'Custom Media Upload', 'digital-newspaper-plus' ),
+            'panel'      => 'digital_newspaper_site_identity_panel'
+        ));
+
+        // Add setting for the custom media upload
+        $wp_customize->add_setting( 'custom_ad_media_one', array(
+            'default'           => '',
+            'sanitize_callback' => 'absint',
+        ));
+        $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'custom_ad_media_one', array(
+            'label'    => __( 'Upload Ad One', 'digital-newspaper-plus' ),
+            'description' => __( 'Upload image file', 'digital-newspaper-plus' ),
+            'section'  => 'custom_ad_one_media_section',
+            'mime_type' => 'image'
+        )));
+
+        // Add setting for the custom media URL
+        $wp_customize->add_setting( 'dn_custom_media_one_url', array(
+            'default'           => '',
+            'sanitize_callback' => 'esc_url_raw'
+        ) );
+
+        $wp_customize->add_control( 'dn_custom_media_one_url', array(
+            'label'   => __( 'Ad 1 URL', 'digital-newspaper-plus' ),
+            'section' => 'custom_ad_one_media_section',
+            'type'    => 'url'
+        ));
+
+        // Add setting for the custom media upload
+        $wp_customize->add_setting( 'custom_ad_media_two', array(
+            'default'           => '',
+            'sanitize_callback' => 'absint'
+        ));
+        $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, 'custom_ad_media_two', array(
+            'label'    => __( 'Upload Ad Two', 'digital-newspaper-plus' ),
+            'description' => __( 'Upload image file', 'digital-newspaper-plus' ),
+            'section'  => 'custom_ad_one_media_section',
+            'mime_type' => 'image'
+        )));
+
+        // Add setting for the custom media URL
+        $wp_customize->add_setting( 'dn_custom_media_two_url', array(
+            'default'           => '',
+            'sanitize_callback' => 'esc_url_raw'
+        ) );
+
+        $wp_customize->add_control( 'dn_custom_media_two_url', array(
+            'label'   => __( 'Ad 2 URL', 'digital-newspaper-plus' ),
+            'section' => 'custom_ad_one_media_section',
+            'type'    => 'url'
+        ));
+    }
+    add_action( 'customize_register', 'digital_newspaper_child_customizer_controls', 12 );
+endif;
+
+if( ! function_exists( 'digital_newspaper_child_header_ad_area_one' ) ) :
+    // Add custom media to the header area
+    function digital_newspaper_child_header_ad_area_one( $wp_customize ) {
+        $media_id = get_theme_mod( 'custom_ad_media_one' );
+        $dn_custom_media_one_url = get_theme_mod( 'dn_custom_media_one_url' );
+        if ( $media_id ) {
+            $media_url = wp_get_attachment_url( $media_id );
+            echo '<a href="' .esc_url( $dn_custom_media_one_url ). '"><img src="' . esc_url( $media_url ) . '"></a>';
+        }
+    }
+    add_action( 'header_ad_one_hook', 'digital_newspaper_child_header_ad_area_one', 20 );
+endif;
+
+if( ! function_exists( 'digital_newspaper_header_child_ad_area_two' ) ) :
+    // Add custom media to the header area
+    function digital_newspaper_header_child_ad_area_two( $wp_customize ) {
+        $media_id = get_theme_mod( 'custom_ad_media_two' );
+        $dn_custom_media_two_url = get_theme_mod( 'dn_custom_media_two_url' );
+        if ( $media_id ) {
+            $media_url = wp_get_attachment_url( $media_id );
+            echo '<a href="' .esc_url( $dn_custom_media_two_url ). '"><img src="' . esc_url( $media_url ) . '"></a>';
+        }
+    }
+    add_action( 'header_ad_two_hook', 'digital_newspaper_header_child_ad_area_two', 20 );
 endif;
