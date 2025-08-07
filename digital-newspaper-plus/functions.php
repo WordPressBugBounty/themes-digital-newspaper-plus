@@ -598,7 +598,7 @@ if( ! function_exists( 'digital_newspaper_child_header_ad_area_one' ) ) :
         $media_id = get_theme_mod( 'custom_ad_media_one' );
         $dn_custom_media_one_url = get_theme_mod( 'dn_custom_media_one_url' );
         if ( $media_id ) {
-            $media_url = wp_get_attachment_url( $media_id );
+            $media_url = wp_get_attachment_image_url( $media_id, 'full' );
             echo '<a href="' .esc_url( $dn_custom_media_one_url ). '"><img src="' . esc_url( $media_url ) . '"></a>';
         }
     }
@@ -611,7 +611,7 @@ if( ! function_exists( 'digital_newspaper_header_child_ad_area_two' ) ) :
         $media_id = get_theme_mod( 'custom_ad_media_two' );
         $dn_custom_media_two_url = get_theme_mod( 'dn_custom_media_two_url' );
         if ( $media_id ) {
-            $media_url = wp_get_attachment_url( $media_id );
+            $media_url = wp_get_attachment_image_url( $media_id, 'full' );
             echo '<a href="' .esc_url( $dn_custom_media_two_url ). '"><img src="' . esc_url( $media_url ) . '"></a>';
         }
     }
